@@ -54,10 +54,10 @@ function createTodoObject (path, line){
   let arrayOfParams = line.split(';');
   return {
     importance: getImportance(line),
-    fileName: path,
-    date: getDate (arrayOfParams),
     user: getUserName(arrayOfParams),
+    date: getDate (arrayOfParams),
     comment: getComment(arrayOfParams),
+    fileName: path,
   }
 }
 
