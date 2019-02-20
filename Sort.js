@@ -2,9 +2,9 @@ function sortBy (property) {
   return function(a, b){
     if(!a[property]) return 1;
     if(!b[property]) return -1;
-    var result = (String(a[property]).toLowerCase() > String(b[property]).toLowerCase()) ? 1
-      : (String(a[property]).toLowerCase() < String(b[property]).toLowerCase()) ? -1 : 0;
-    return result;
+    let result = (String(a[property]).toLowerCase() > String(b[property]).toLowerCase()) ? -1
+      : (String(a[property]).toLowerCase() < String(b[property]).toLowerCase()) ? 1 : 0;
+    return (property == 'user') ? (-result) : (result);
   }
 }
 

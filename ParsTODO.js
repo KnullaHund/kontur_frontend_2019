@@ -19,7 +19,7 @@ function createTodoList() {
 }
 
 function GetNecessaryPoints(fileContent) {
-  const todoStart = /\/\/\s{0,}TODO\s{0,}.{1,}\n/ig;
+  const todoStart = /\/\/\s{0,}TODO\s{0,}.{1,}\n*/ig;
   let todoArray = fileContent.match(todoStart);
   if (!todoArray) return [];
 
