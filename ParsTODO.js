@@ -51,13 +51,13 @@ function makeTodoArray() {
 }
 
 function createTodoObject (path, line){
-  let arrayOfParams = line.split(';');
+  let arrayOfParams = line.split(/\s*;\s*/);
   return {
     importance: getImportance(line),
     user: getUserName(arrayOfParams),
     date: getDate (arrayOfParams),
     comment: getComment(arrayOfParams),
-    fileName: path,
+    fileName: path.replace('.//', ''),
   }
 }
 

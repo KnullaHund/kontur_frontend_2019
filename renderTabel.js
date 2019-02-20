@@ -1,4 +1,3 @@
-const {makeTodoArray} = require('./ParsTODO');
 const SETTINGS = {
   importance: {
     max: 1,
@@ -46,11 +45,11 @@ function settingsCorrector(todoArray) {
 }
 
 function createValidHeader() {
-  let validCells = [];
+  let validRow = [];
   for (let item in SETTINGS) {
-    validCells.push(createHeaderCell(SETTINGS[item], item));
+    validRow.push(createHeaderCell(SETTINGS[item], item));
   }
-  let validLine = validCells.join(SEPARATORSYMBOL);
+  let validLine = validRow.join(SEPARATORSYMBOL);
   return validLine;
 }
 
@@ -81,26 +80,31 @@ function createBodyCell(item, todoArray, i){
       title = (todoArray[i][item] > 0) ?
       '!' :
       ' ';
-      return PADDINGSYMBOL.repeat(PADDINGNUMBER)
-       + title
-       + PADDINGSYMBOL.repeat((SETTINGS[item].currentMax - title.length) + PADDINGNUMBER);
        break;
-    case 'date':
-      return PADDINGSYMBOL.repeat(PADDINGNUMBER)
-        + String(todoArray[i][item]);
-        + PADDINGSYMBOL.repeat((SETTINGS[item].currentMax - String(todoArray[i][item]).length) + PADDINGNUMBER);
-      break;
     default:
       title = lengthChecker(todoArray[i][item], item);
-      return PADDINGSYMBOL.repeat(PADDINGNUMBER)
-      + title
-      + PADDINGSYMBOL.repeat((SETTINGS[item].currentMax - title.length) + PADDINGNUMBER);
       break;
   }
+  return PADDINGSYMBOL.repeat(PADDINGNUMBER)
+    + title
+    + PADDINGSYMBOL.repeat((SETTINGS[item].currentMax - title.length) + PADDINGNUMBER);
 }
 
-function renderTabel() {
+function createFooter() {
+  let amount = 0;
+  for (let item in SETTINGS) {
+    amount += SETTINGS[item].currentMax + PADDINGNUMBER*2 + SEPARATORSYMBOL.length;
+  };
+  return SPACESYMBOL.repeat(amount - SEPARATORSYMBOL.length);
+}
 
+function renderTabel(todoArray) {
+  settingsCorrector(todoArray);
+  let table = createValidHeader(todoArray) + '\n';
+  table +=   createFooter() + '\n';
+  table +=   createValidBody(todoArray);
+  table +=   createFooter();
+  console.log(table);
 }
 
 function lengthChecker(line, item) {
@@ -109,5 +113,6 @@ function lengthChecker(line, item) {
   line;
 }
 
-settingsCorrector(makeTodoArray())
-console.log(createValidBody(makeTodoArray()));
+module.exports = {
+  renderTabel,
+}
