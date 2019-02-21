@@ -1,11 +1,14 @@
-function sortBy (property) {
-  return function(a, b){
+function sortBy (todoArray, property) {
+  let order = (property.indexOf('-') > -1) ? (-1) : (1);
+  property = property.replace('-', '');
+  function sorting (a, b){
     if(!a[property]) return 1;
     if(!b[property]) return -1;
     let result = (String(a[property]).toLowerCase() > String(b[property]).toLowerCase()) ? -1
       : (String(a[property]).toLowerCase() < String(b[property]).toLowerCase()) ? 1 : 0;
-    return (property == 'user') ? (-result) : (result);
+    return result * order;
   }
+  return todoArray.sort(sorting);
 }
 
 function todoByUser (todoArray, user) {

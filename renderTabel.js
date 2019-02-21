@@ -27,19 +27,29 @@ const SETTINGS = {
   },
 };
 const SPACESYMBOL = '-',
-      SEPARATORSYMBOL = '|',
-      PADDINGSYMBOL = ' ',
-      PADDINGNUMBER = 2;
+  SEPARATORSYMBOL = '|',
+  PADDINGSYMBOL = ' ',
+  PADDINGNUMBER = 2;
+
+function renderTabel(todoArray) {
+  settingsCorrector(todoArray);
+  let table = createValidHeader(todoArray);
+  table += createFooter();
+  table += createValidBody(todoArray);
+  table += createFooter();
+  console.log(table);
+}
 
 function settingsCorrector(todoArray) {
   for (let item in SETTINGS) {
     for (let i = 0; i < todoArray.length; i++) {
-      let title = String(todoArray[i][item]);
-      (title.length > SETTINGS[item].max) ?
-      (SETTINGS[item].currentMax = 50) :
-      (SETTINGS[item].currentMax >= title.length) ?
-      (SETTINGS[item].currentMax = SETTINGS[item].currentMax) :
-      (SETTINGS[item].currentMax = title.length);
+      let title = String(todoArray[i][item]),
+          setting = SETTINGS[item];
+      (title.length > setting.max) ?
+      (setting.currentMax = 50) :
+      (setting.currentMax >= title.length) ?
+      (setting.currentMax = setting.currentMax) :
+      (setting.currentMax = title.length);
     }
   }
 }
@@ -50,17 +60,17 @@ function createValidHeader() {
     validRow.push(createHeaderCell(SETTINGS[item], item));
   }
   let validLine = validRow.join(SEPARATORSYMBOL);
-  return validLine;
+  return validLine + '\n';
 }
 
-function createHeaderCell(objLine, item){
+function createHeaderCell(objLine, item) {
   let title = lengthChecker(objLine.customTitle || objLine.propertyName, item);
-  return PADDINGSYMBOL.repeat(PADDINGNUMBER)
-   + title
-   + PADDINGSYMBOL.repeat((objLine.currentMax - title.length) + PADDINGNUMBER);
+  return PADDINGSYMBOL.repeat(PADDINGNUMBER) +
+    title +
+    PADDINGSYMBOL.repeat((objLine.currentMax - title.length) + PADDINGNUMBER);
 }
 
-function createValidBody(todoArray){
+function createValidBody(todoArray) {
   let validRow = [];
   let validLines = '';
   for (let i = 0; i < todoArray.length; i++) {
@@ -73,44 +83,38 @@ function createValidBody(todoArray){
   return validLines;
 }
 
-function createBodyCell(item, todoArray, i){
-  let title ='';
-  switch(item) {
+function createBodyCell(item, todoArray, i) {
+  let title = '',
+      setting = SETTINGS[item];
+  switch (item) {
     case 'importance':
       title = (todoArray[i][item] > 0) ?
-      '!' :
-      ' ';
-       break;
+        '!' :
+        ' ';
+      break;
     default:
       title = lengthChecker(todoArray[i][item], item);
       break;
   }
-  return PADDINGSYMBOL.repeat(PADDINGNUMBER)
-    + title
-    + PADDINGSYMBOL.repeat((SETTINGS[item].currentMax - title.length) + PADDINGNUMBER);
+  return PADDINGSYMBOL.repeat(PADDINGNUMBER) +
+    title +
+    PADDINGSYMBOL.repeat((setting.currentMax - title.length) + PADDINGNUMBER);
 }
 
 function createFooter() {
   let amount = 0;
   for (let item in SETTINGS) {
-    amount += SETTINGS[item].currentMax + PADDINGNUMBER*2 + SEPARATORSYMBOL.length;
+    let setting = SETTINGS[item];
+    amount += setting.currentMax + PADDINGNUMBER * 2 + SEPARATORSYMBOL.length;
   };
-  return SPACESYMBOL.repeat(amount - SEPARATORSYMBOL.length);
-}
-
-function renderTabel(todoArray) {
-  settingsCorrector(todoArray);
-  let table = createValidHeader(todoArray) + '\n';
-  table +=   createFooter() + '\n';
-  table +=   createValidBody(todoArray);
-  table +=   createFooter();
-  console.log(table);
+  return SPACESYMBOL.repeat(amount - SEPARATORSYMBOL.length) + '\n';
 }
 
 function lengthChecker(line, item) {
-  return (line.length > SETTINGS[item].currentMax) ?
-  (line = line.substr(0, 47) + '.' + '.' + '.') :
-  line;
+  let setting = SETTINGS[item];
+  return (line.length > setting.currentMax) ?
+    (line = line.substr(0, 47) + '...') :
+    line;
 }
 
 module.exports = {

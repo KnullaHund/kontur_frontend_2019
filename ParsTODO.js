@@ -24,7 +24,7 @@ function GetNecessaryPoints(fileContent) {
   if (!todoArray) return [];
 
   todoArray = todoArray.map(item => {
-    item = item.replace(/\/\/\s*TODO\s*:*/i, '').replace('\n', '');
+    item = item.replace(/\/\/\s*TODO\s*:*/i, '').replace(/\n/g, '');
     return item;
   });
 
@@ -68,8 +68,9 @@ function getImportance(line){
 function getDate(arrayOfParams){
   const validDate = /\d{4}-\d{2}-\d{2}/;
   for (let i = 0; i < arrayOfParams.length; i++){
-    if (arrayOfParams[i].search(validDate) != -1){
-      return arrayOfParams[i].match(validDate)[0];
+    let param = arrayOfParams[i];
+    if (param.search(validDate) != -1){
+      return param.match(validDate)[0];
     };
   };
   return '';
@@ -79,11 +80,12 @@ function getUserName(arrayOfParams){
   const validName = /\w{1,}/;
   const validDate = /\d{4}-\d{2}-\d{2}/;
   for (let i = 0; i < arrayOfParams.length - 1; i++){
-    if (arrayOfParams[i].search(validDate) != -1){
+    let param = arrayOfParams[i];
+    if (param.search(validDate) != -1){
       continue;
     };
-    if (arrayOfParams[i].search(validName) != -1){
-      return arrayOfParams[i].match(validName)[0];
+    if (param.search(validName) != -1){
+      return param.match(validName)[0];
     };
   }
   return '';
